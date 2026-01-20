@@ -24,9 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           TextButton(
             onPressed: () {
-              setState(() {
-                notes.removeAt(index);
-              });
+              deleteNote(index);
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Note berhasil dihapus')),
@@ -37,6 +35,12 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
     );
+  }
+
+  void deleteNote(int index) {
+    setState(() {
+      notes.removeAt(index);
+    });
   }
 
   @override
