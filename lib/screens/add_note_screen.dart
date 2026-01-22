@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import '../models/note_model.dart';
+import 'package:get/get.dart';
+import '../controllers/notes_controller.dart';
+import '../models/note.dart';
+import '../routes/app_routes.dart';
 
 class AddNoteScreen extends StatefulWidget {
   const AddNoteScreen({super.key});
@@ -11,6 +14,13 @@ class AddNoteScreen extends StatefulWidget {
 class _AddNoteScreenState extends State<AddNoteScreen> {
   final titleController = TextEditingController();
   final contentController = TextEditingController();
+
+  @override
+  void dispose() {
+    titleController.dispose();
+    contentController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,10 +62,10 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                     final content = contentController.text.trim();
 
                     if (title.isEmpty || content.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Title dan Content wajib diisi'),
-                        ),
+                      Get.snackbar(
+                        'Validation',
+                        'Title dan Content wajib diisi',
+                        snackPosition: SnackPosition.BOTTOM,
                       );
                       return;
                     }
@@ -69,7 +79,9 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                       date: date,
                     );
 
-                    Navigator.pop(context, note);
+                    final controller = Get.find<NotesController>();
+                    controller.addNote(note);
+                    Get.offNamed(AppRoutes.home);
                   },
                   child: const Text('Save Note'),
                 ),

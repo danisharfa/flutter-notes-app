@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../models/note_model.dart';
-import 'edit_note_screen.dart';
+import 'package:get/get.dart';
+import '../models/note.dart';
+import '../routes/app_routes.dart';
 
 class DetailScreen extends StatelessWidget {
   final Note note;
@@ -15,19 +16,12 @@ class DetailScreen extends StatelessWidget {
         title: Text(note.title),
         actions: [
           IconButton(
-            onPressed: () async {
-              final updatedNote = await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      EditNoteScreen(note: note, index: index),
-                ),
+            onPressed: () {
+              Get.toNamed(
+                AppRoutes.editNote,
+                arguments: note,
+                parameters: {'index': index.toString()},
               );
-
-              if (updatedNote != null && updatedNote is Note) {
-                notes[index] = updatedNote;
-                Navigator.pop(context, true);
-              }
             },
             icon: const Icon(Icons.edit),
           ),

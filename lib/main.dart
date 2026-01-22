@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'screens/home_screen.dart';
+import 'package:get/get.dart';
+import 'routes/app_routes.dart';
+import 'routes/app_pages.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,13 +12,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Notes APP',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         fontFamily: 'Poppins',
       ),
-      home: const HomeScreen(),
+      initialRoute: AppRoutes.home,
+      getPages: AppPages.pages,
     );
   }
 }

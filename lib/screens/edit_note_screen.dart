@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import '../models/note_model.dart';
+import 'package:get/get.dart';
+import '../controllers/notes_controller.dart';
+import '../models/note.dart';
+import '../routes/app_routes.dart';
 
 class EditNoteScreen extends StatefulWidget {
   final Note note;
@@ -46,7 +49,7 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
                 ),
               ),
               const SizedBox(height: 16.0),
-              TextFormField(
+              TextField(
                 controller: contentController,
                 maxLines: null,
                 keyboardType: TextInputType.multiline,
@@ -65,10 +68,10 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
                     final content = contentController.text.trim();
 
                     if (title.isEmpty || content.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Title dan Content wajib diisi'),
-                        ),
+                      Get.snackbar(
+                        'Validation',
+                        'Title dan Content wajib diisi',
+                        snackPosition: SnackPosition.BOTTOM,
                       );
                       return;
                     }
@@ -79,7 +82,9 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
                       date: widget.note.date,
                     );
 
-                    Navigator.pop(context, updatedNote);
+                    final controller = Get.find<NotesController>();
+                    controller.updateNote(widget.index, updatedNote);
+                    Get.offNamed(AppRoutes.home);
                   },
                   child: const Text('Update Note'),
                 ),

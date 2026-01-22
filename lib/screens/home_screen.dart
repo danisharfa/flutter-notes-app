@@ -1,81 +1,69 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:notes_app/widgets/note_card.dart';
-import 'package:notes_app/screens/add_note_screen.dart';
-import '../models/note_model.dart';
+import '../controllers/notes_controller.dart';
+import '../routes/app_routes.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
+  Widget build(BuildContext context) {
+    final notesController = Get.put(NotesController());
 
-class _HomeScreenState extends State<HomeScreen> {
-  void _showDeleteDialog(int index) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Notes',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+      ),
+      body: Obx(
+        () => ListView.builder(
+          itemCount: notesController.notesList.length,
+          itemBuilder: (context, index) {
+            final note = notesController.notesList[index];
+            return NoteCard(
+              note: note,
+              index: index,
+              onDelete: () => _showDeleteDialog(context, index),
+            );
+          },
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Get.toNamed(AppRoutes.addNote);
+        },
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  void _showDeleteDialog(BuildContext context, int index) {
+    Get.dialog(
+      AlertDialog(
         title: const Text('Hapus Note'),
         content: const Text('Apakah Anda yakin ingin menghapus note ini?'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Batal'),
-          ),
+          TextButton(onPressed: () => Get.back(), child: const Text('Batal')),
           TextButton(
             onPressed: () {
-              deleteNote(index);
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Note berhasil dihapus')),
+              final controller = Get.find<NotesController>();
+              controller.deleteNote(index);
+              Get.back();
+              Get.snackbar(
+                'Success',
+                'Note berhasil dihapus',
+                snackPosition: SnackPosition.BOTTOM,
+                backgroundColor: Colors.redAccent,
+                colorText: Colors.white,
               );
             },
             child: const Text('Hapus', style: TextStyle(color: Colors.red)),
           ),
         ],
-      ),
-    );
-  }
-
-  void deleteNote(int index) {
-    setState(() {
-      notes.removeAt(index);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Notes', style: TextStyle(fontWeight: FontWeight.bold)),
-        centerTitle: true,
-      ),
-      body: ListView.builder(
-        itemCount: notes.length,
-        itemBuilder: (context, index) {
-          final note = notes[index];
-          return NoteCard(
-            note: note,
-            index: index,
-            onDelete: () => _showDeleteDialog(index),
-            onUpdate: () => setState(() {}),
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final newNote = await Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const AddNoteScreen()),
-          );
-
-          if (newNote != null && newNote is Note) {
-            setState(() {
-              notes.insert(0, newNote);
-            });
-          }
-        },
-        child: const Icon(Icons.add),
       ),
     );
   }

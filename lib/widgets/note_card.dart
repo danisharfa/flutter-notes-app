@@ -1,35 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:notes_app/screens/detail_screen.dart';
-import '../models/note_model.dart';
+import 'package:get/get.dart';
+import '../models/note.dart';
+import '../routes/app_routes.dart';
 
 class NoteCard extends StatelessWidget {
   final Note note;
   final int index;
   final VoidCallback onDelete;
-  final VoidCallback onUpdate;
 
   const NoteCard({
     super.key,
     required this.note,
     required this.index,
     required this.onDelete,
-    required this.onUpdate,
   });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () async {
-        final result = await Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DetailScreen(note: note, index: index),
-          ),
+      onTap: () {
+        Get.toNamed(
+          AppRoutes.detail,
+          arguments: note,
+          parameters: {'index': index.toString()},
         );
-
-        if (result == true) {
-          onUpdate();
-        }
       },
       child: Card(
         elevation: 4,
