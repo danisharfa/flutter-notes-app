@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/notes_controller.dart';
 import '../models/note.dart';
-import '../routes/app_routes.dart';
 
 class AddNoteScreen extends StatefulWidget {
   const AddNoteScreen({super.key});
@@ -81,7 +80,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
 
                     final controller = Get.find<NotesController>();
                     controller.addNote(note);
-                    Get.offNamed(AppRoutes.home);
+                    Get.back();
                   },
                   child: const Text('Save Note'),
                 ),
