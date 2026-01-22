@@ -17,13 +17,28 @@ class DetailScreen extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              Get.toNamed(
-                AppRoutes.editNote,
-                arguments: note,
-                parameters: {'index': index.toString()},
+              Get.bottomSheet(
+                Container(
+                  color: Colors.white,
+                  child: Wrap(
+                    children: [
+                      ListTile(
+                        leading: Icon(Icons.edit),
+                        title: Text('Edit'),
+                        onTap: () {
+                          Get.toNamed(
+                            AppRoutes.editNote,
+                            arguments: note,
+                            parameters: {'index': index.toString()},
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
               );
             },
-            icon: const Icon(Icons.edit),
+            icon: const Icon(Icons.menu),
           ),
         ],
       ),
